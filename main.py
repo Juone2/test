@@ -1,5 +1,4 @@
 import discord
-import random
 from datetime import datetime, timedelta
 from discord.ext import commands
 import asyncio
