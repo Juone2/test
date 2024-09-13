@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 import asyncio
 from dotenv import load_dotenv
 import os
+import sys
+print(sys.path)
 
 load_dotenv()
 
