@@ -16,10 +16,10 @@ CATEGORY_IDS = [
     1276183767974678574, 1276184216459153489, 1276184261430345778,
     1276184313859280929, 1276184503416782968, 1276184672862339178,
     1276184773378834506, 1276184805595414589, 1276184828894777354,
-    1276184854140157952
+    1276184854140157952, 1284033111805530144
 ]  # 삭제를 감지할 카테고리 ID 리스트
 ROLE_ID = 1243848098325856318  # DM 보낼 역할 ID
-REMOVE_ROLE_ID = 978262058065883236 # 삭제할 역할 ID 
+REMOVE_ROLE_ID = 1283358280361447517 # 삭제할 역할 ID  978262058065883236
 
 if TOKEN:
     print("Token loaded successfully")
@@ -70,7 +70,7 @@ class MyClient(discord.Client):
         """역할을 제거하고 해당 멤버에게 알림을 보내는 함수"""
         try:
             await member.remove_roles(role)  # 역할 제거
-            await member.send(f"{category_name} 카테고리가 삭제되어, '{role.name}' 역할이 제거되었습니다.")
+            await member.send(f"'{category_name}' 카테고리가 삭제되어, '{role.name}' 역할이 제거되었습니다.")
             print(f"Removed {role.name} and sent DM to {member.name}")
         except discord.Forbidden:
             print(f"Failed to remove {role.name} from {member.name} due to permissions.")
