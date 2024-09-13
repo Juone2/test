@@ -1,3 +1,5 @@
+# python3 /Users/juwon/Desktop/Develop_Study/discord-bot/test/main.py
+
 import discord
 from datetime import datetime, timedelta
 from discord.ext import commands
@@ -8,6 +10,7 @@ import os
 load_dotenv()
 
 TOKEN = os.environ.get('TOKEN_KEY')
+
 CHANNEL_ID = "1052819133093384215"
 CATEGORY_IDS = [
     1276183554660761641, 1276183604803928064, 1276183630712016978,
@@ -18,6 +21,11 @@ CATEGORY_IDS = [
 ]  # 삭제를 감지할 카테고리 ID 리스트
 ROLE_ID = 1243848098325856318  # DM 보낼 역할 ID
 REMOVE_ROLE_ID = 978262058065883236 # 삭제할 역할 ID 
+
+if TOKEN:
+    print("Token loaded successfully")
+else:
+    print("Failed to load token")
 
 class MyClient(discord.Client):
     async def on_ready(self):
