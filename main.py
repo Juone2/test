@@ -93,7 +93,7 @@ class MyClient(discord.Client):
                 for member in role.members:
                     try:
                         # 해당 역할을 가진 멤버에게 DM 전송
-                        await member.send(f"다원 바보 ㅋ.")
+                        await member.send(f"다원 바보 ㅋㅋ.")
                         print(f"DM sent to {member.name}")
                     except discord.Forbidden:
                         print(f"Failed to send DM to {member.name}")
