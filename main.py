@@ -22,6 +22,7 @@ CATEGORY_IDS = [
 ]  # 삭제를 감지할 카테고리 ID 리스트
 ROLE_ID = 1243848098325856318  # DM 보낼 역할 ID
 REMOVE_ROLE_ID = 978262058065883236 # 삭제할 역할 ID  
+DAWON_ROLE = 977898740209815586 # 다원 님 ID
 
 if TOKEN:
     print("Token loaded successfully")
@@ -78,6 +79,26 @@ class MyClient(discord.Client):
             print(f"Failed to remove {role.name} from {member.name} due to permissions.")
         except Exception as e:
             print(f"An error occurred while removing {role.name} from {member.name}: {e}")
+
+
+    async def on_message(self, message):  # on_message에 message 인자를 추가
+        if message.author == self.user:
+            return
+
+        if message.content == ".ㅋㅋ":
+            guild = message.guild
+            role = guild.get_role(DAWON_ROLE)
+
+            if role:
+                for member in role.members:
+                    try:
+                        # 해당 역할을 가진 멤버에게 DM 전송
+                        await member.send(f"다원 바보 ㅋ.")
+                        print(f"DM sent to {member.name}")
+                    except discord.Forbidden:
+                        print(f"Failed to send DM to {member.name}")
+                    except Exception as e:
+                        print(f"An error occurred: {e}")
 
 # 필요한 인텐트 활성화
 intents = discord.Intents.default()
