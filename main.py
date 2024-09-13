@@ -3,8 +3,12 @@ import random
 from datetime import datetime, timedelta
 from discord.ext import commands
 import asyncio
+from dotenv import load_dotenv
+import os
 
-TOKEN = "MTI0NjU3MTQ2NDQ2NzkzOTQzMQ.G8akMO.dpyv4v_pKVLrdojgO2sFp84iq39SitrFz86hYU"
+load_dotenv()
+
+TOKEN = os.environ.get('TOKEN_KEY')
 CHANNEL_ID = "1052819133093384215"
 CATEGORY_IDS = [
     1276183554660761641, 1276183604803928064, 1276183630712016978,

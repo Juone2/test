@@ -4,3 +4,4 @@ openpyxl
 youtube_dl
 random
 datetime
+dotenv
