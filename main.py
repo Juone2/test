@@ -364,9 +364,7 @@ async def performance_record(ctx, user_name: str):
         return
 
     record_lines = [
-        f"'{user_name}' 님의 활동 기록:",
-        f"이름변경 횟수: {recommendation_counts.get(user_name, 0)}회",
-        f"등업 횟수: {new_mention_counts.get(user_name, 0)}회",
+        f"'{user_name}' 님의 실적 기록\n",
     ]
 
     # 각 행동의 카운트를 추가합니다.
@@ -380,7 +378,7 @@ async def help_command(ctx):
     """사용 가능한 명령어에 대한 도움말을 제공하는 명령어"""
     help_text = (
         "**사용 가능한 명령어:**\n"
-        "- 📜 `.실적 <유저 이름> <액션>`: 유저의 실적 점수를 조정합니다.\n"
+        "- 📜 `.실적 <유저 이름> <액션>`: 실적을 등록합니다.\n"
         "   - **액션 예시:** `홍보10회`, `이름변경`, `등업`, `수집인증` 등\n"
         "- 🔍 `.실적기록 <유저 이름>`: 유저의 활동 기록을 조회합니다.\n"
         "- 🔍 `.실적조회 <유저 이름>`: 유저의 실적을 조회합니다.\n"
