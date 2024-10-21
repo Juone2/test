@@ -322,7 +322,6 @@ async def manage_performance(ctx, user_name: str, action: str):
             await ctx.send(f"{user_name}의 추천이 7회 누적되어 100점이 추가되었습니다.")
         else:
             await ctx.send(f"{user_name}의 추천 횟수가 {recommendation_counts[user_name]}회 누적되었습니다. (7회 시 100점 추가)")
-    elif action == "뉴페멘션":
         new_mention_counts[user_name] = new_mention_counts.get(user_name, 0) + 1
         if new_mention_counts[user_name] == 5:
             await update_performance(user_name, actions["뉴페멘션"])
