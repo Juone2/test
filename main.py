@@ -364,7 +364,7 @@ async def performance_record(ctx, user_name: str):
 
     await manage_performance(ctx, user_name, '초기화')
     
-@bot.command(name='도움말')
+@bot.command(name='실적도움말')
 async def help_command(ctx):
     """사용 가능한 명령어에 대한 도움말을 제공하는 명령어"""
     help_text = (
