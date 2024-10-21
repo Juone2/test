@@ -323,11 +323,6 @@ async def manage_performance(ctx, user_name: str, action: str):
         else:
             await ctx.send(f"{user_name}의 추천 횟수가 {recommendation_counts[user_name]}회 누적되었습니다. (7회 시 100점 추가)")
         new_mention_counts[user_name] = new_mention_counts.get(user_name, 0) + 1
-        if new_mention_counts[user_name] == 5:
-            await update_performance(user_name, actions["뉴페멘션"])
-            await ctx.send(f"{user_name}의 뉴페멘션이 5회 누적되어 20점이 추가되었습니다.")
-        else:
-            await ctx.send(f"{user_name}의 뉴페멘션 횟수가 {new_mention_counts[user_name]}회 누적되었습니다. (5회 시 20점 추가)")
     else:
         await update_performance(user_name, actions[action])
         await ctx.send(f"'{user_name}' 님의 실적이 {actions[action]}점 증가했습니다.")
