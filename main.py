@@ -265,6 +265,32 @@ async def help_command(ctx):
     )
     await ctx.send(help_text)
 
+# 활동 기록을 위한 행동 정의
+actions = {
+    "홍보10회": 100,
+    "이름변경": 20,
+    "등업": 20,
+    "수집인증": 20,
+    "건의함": 20,
+    "뉴페멘션": 20,
+    "조각지급": 50,
+    "안내": 100,
+    "역할구매": 100,
+    "부스트편지": 100,
+    "이벤트기획": 100,
+    "경고내역": 100,
+    "재입장": 100,
+    "설야멘션": 100,
+    "갠역멘션": 100,
+    "면접참관": 200,
+    "회의참여도": 200,
+    "추천": 100,
+    "초기화": 0
+}
+
+# 각 행동의 카운트를 저장하는 딕셔너리
+action_counts = {action: 0 for action in actions.keys()}
+
 @bot.command(name='실적')
 async def performance_command(ctx, user_name: str, action: str):
     """유저 이름과 행동을 기반으로 실적 점수를 조정하는 명령어"""
@@ -275,36 +301,18 @@ async def manage_performance(ctx, user_name: str, action: str):
         await ctx.send(f"{user_name}은(는) 유효한 유저가 아닙니다. 다음 유저들 중에서 선택해주세요: {', '.join(user_list)}")
         return
 
-    actions = {
-        "홍보10회": 100,
-        "이름변경": 20,
-        "등업": 20,
-        "수집인증": 20,
-        "건의함": 20,
-        "뉴페멘션": 20,
-        "조각지급": 50,
-        "안내": 100,
-        "역할구매": 100,
-        "부스트편지": 100,
-        "이벤트기획": 100,
-        "경고내역": 100,
-        "재입장": 100,
-        "설야멘션": 100,
-        "갠역멘션": 100,
-        "면접참관": 200,
-        "회의참여도": 200,
-        "추천": 100,
-        "초기화": 0
-    }
-
     if action == "초기화":
         performance_scores[user_name] = 0
+        action_counts[user_name] = {action: 0 for action in actions.keys()}  # 초기화 시 행동 카운트 리셋
         await ctx.send(f"'{user_name}' 님의 실적이 초기화되었습니다.")
         return
 
     if action not in actions:
         await ctx.send(f"올바른 명령어를 사용해주세요. 사용 가능한 명령어: {', '.join(actions.keys())} 및 초기화")
         return
+
+    # 행동 카운트 증가
+    action_counts[action] += 1
 
     # 특정 액션에 따라 점수 증가 처리
     if action == "추천":
@@ -329,23 +337,15 @@ async def update_performance(user_name: str, points: int):
     """특정 유저의 실적 점수를 업데이트하는 함수"""
     performance_scores[user_name] += points
 
-@bot.command(name='실적조회')
-async def total_performance(ctx, user_name: str):
-    """유저 이름을 받아 해당 유저의 총 실적 점수를 조회하는 명령어"""
-    if user_name not in user_list:
-        await ctx.send(f"{user_name}은(는) 유효한 유저가 아닙니다. 다음 유저들 중에서 선택해주세요: {', '.join(user_list)}")
-        return
-
-    total_points = performance_scores.get(user_name, 0)
-    await ctx.send(f"'{user_name}' 님의 총 실적 점수는 {total_points}점입니다.")
-
 @bot.command(name='실적초기화')
 async def performance_reset(ctx, user_name: str):
     """유저 이름을 받아 해당 유저의 실적 점수를 초기화하는 명령어"""
     if user_name not in user_list:
         await ctx.send(f"{user_name}은(는) 유효한 유저가 아닙니다. 다음 유저들 중에서 선택해주세요: {', '.join(user_list)}")
         return
-    
+
+    await manage_performance(ctx, user_name, '초기화')
+
 @bot.command(name='실적기록')
 async def performance_record(ctx, user_name: str):
     """유저 이름을 받아 해당 유저의 활동 기록을 조회하는 명령어"""
@@ -357,13 +357,14 @@ async def performance_record(ctx, user_name: str):
         f"'{user_name}' 님의 활동 기록:",
         f"이름변경 횟수: {recommendation_counts.get(user_name, 0)}회",
         f"등업 횟수: {new_mention_counts.get(user_name, 0)}회",
-        # 다른 활동 내역 추가 가능
     ]
-    
+
+    # 각 행동의 카운트를 추가합니다.
+    for action in actions.keys():
+        record_lines.append(f"{action} 횟수: {action_counts.get(action, 0)}회")
+
     await ctx.send("\n".join(record_lines))
 
-    await manage_performance(ctx, user_name, '초기화')
-    
 @bot.command(name='실적도움말')
 async def help_command(ctx):
     """사용 가능한 명령어에 대한 도움말을 제공하는 명령어"""
@@ -371,12 +372,12 @@ async def help_command(ctx):
         "**사용 가능한 명령어:**\n"
         "- 📜 `.실적 <유저 이름> <액션>`: 유저의 실적 점수를 조정합니다.\n"
         "   - **액션 예시:** `홍보10회`, `이름변경`, `등업`, `수집인증` 등\n"
-        "- 🔍 `.실적조회 <유저 이름>`: 유저의 총 실적 점수를 조회합니다.\n"
+        "- 🔍 `.실적기록 <유저 이름>`: 유저의 활동 기록을 조회합니다.\n"
         "- 🔄 `.실적초기화 <유저 이름>`: 유저의 실적 점수를 초기화합니다.\n"
-        "- 📊 `.실적기록 <유저 이름>`: 유저의 활동 기록을 조회합니다.\n"
-        "- ❓ `.도움말`: 사용 가능한 명령어를 확인합니다.\n"
+        "- ❓ `.실적도움말`: 사용 가능한 명령어를 확인합니다.\n"
     )
     await ctx.send(help_text)
+
 
 # 봇 실행
 bot.run(TOKEN)
