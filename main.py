@@ -345,8 +345,38 @@ async def performance_reset(ctx, user_name: str):
     if user_name not in user_list:
         await ctx.send(f"{user_name}은(는) 유효한 유저가 아닙니다. 다음 유저들 중에서 선택해주세요: {', '.join(user_list)}")
         return
+    
+@bot.command(name='실적기록')
+async def performance_record(ctx, user_name: str):
+    """유저 이름을 받아 해당 유저의 활동 기록을 조회하는 명령어"""
+    if user_name not in user_list:
+        await ctx.send(f"{user_name}은(는) 유효한 유저가 아닙니다. 다음 유저들 중에서 선택해주세요: {', '.join(user_list)}")
+        return
+
+    record_lines = [
+        f"'{user_name}' 님의 활동 기록:",
+        f"이름변경 횟수: {recommendation_counts.get(user_name, 0)}회",
+        f"등업 횟수: {new_mention_counts.get(user_name, 0)}회",
+        # 다른 활동 내역 추가 가능
+    ]
+    
+    await ctx.send("\n".join(record_lines))
 
     await manage_performance(ctx, user_name, '초기화')
+    
+@bot.command(name='도움말')
+async def help_command(ctx):
+    """사용 가능한 명령어에 대한 도움말을 제공하는 명령어"""
+    help_text = (
+        "**사용 가능한 명령어:**\n"
+        "- 📜 `.실적 <유저 이름> <액션>`: 유저의 실적 점수를 조정합니다.\n"
+        "   - **액션 예시:** `홍보10회`, `이름변경`, `등업`, `수집인증` 등\n"
+        "- 🔍 `.실적조회 <유저 이름>`: 유저의 총 실적 점수를 조회합니다.\n"
+        "- 🔄 `.실적초기화 <유저 이름>`: 유저의 실적 점수를 초기화합니다.\n"
+        "- 📊 `.실적기록 <유저 이름>`: 유저의 활동 기록을 조회합니다.\n"
+        "- ❓ `.도움말`: 사용 가능한 명령어를 확인합니다.\n"
+    )
+    await ctx.send(help_text)
 
 # 봇 실행
 bot.run(TOKEN)
