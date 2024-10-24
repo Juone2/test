@@ -350,23 +350,6 @@ async def total_performance(ctx, user_name: str):
     total_points = performance_scores.get(user_name, 0)
     await ctx.send(f"'{user_name}' 님의 총 실적 점수는 {total_points}점입니다.")
 
-@bot.command(name='실적기록')
-async def performance_record(ctx, user_name: str):
-    """유저 이름을 받아 해당 유저의 활동 기록을 조회하는 명령어"""
-    if user_name not in user_list:
-        await ctx.send(f"{user_name}은(는) 유효한 유저가 아닙니다. 다음 유저들 중에서 선택해주세요: {', '.join(user_list)}")
-        return
-
-    record_lines = [
-        f"'{user_name}' 님의 실적 기록\n",
-    ]
-
-    # 각 행동의 카운트를 추가합니다.
-    for action in actions.keys():
-        record_lines.append(f"{action} 횟수: {action_counts.get(action, 0)}회")
-
-    await ctx.send("\n".join(record_lines))
-
 @bot.command(name='실적도움말')
 async def help_command(ctx):
     """사용 가능한 명령어에 대한 도움말을 제공하는 명령어"""
