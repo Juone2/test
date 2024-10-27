@@ -370,7 +370,7 @@ BLACK_ROLE_ID = 1286174278227722240
 @commands.has_permissions(administrator=True)   
 async def block_chat(ctx):
     channel = ctx.channel  # 명령어가 실행된 채널
-    role = ctx.guild.get_role(ROLE_ID)  # 역할 ID로 역할 객체 가져오기
+    role = ctx.guild.get_role(BLACK_ROLE_ID)  # 역할 ID로 역할 객체 가져오기
 
     if role is None:
         await ctx.send(f"역할을 찾을 수 없습니다.")
