@@ -364,28 +364,36 @@ async def help_command(ctx):
     )
     await ctx.send(help_text)
 
-# BLACK_ROLE_ID = 1286174278227722240
+@bot.command(name='blockchat')
+@commands.has_permissions(administrator=True)  # 관리자 권한 체크
+async def block_chat(ctx):
+    role_id = 1286174278227722240  # 채팅을 제한할 역할 ID
+    role = ctx.guild.get_role(role_id)
 
-# @bot.command(name="반속제한")
-# @commands.has_permissions(administrator=True)   
-# async def block_chat(ctx):
-#     channel = ctx.channel  # 명령어가 실행된 채널
-#     role = ctx.guild.get_role(BLACK_ROLE_ID)  # 역할 ID로 역할 객체 가져오기
+    if role is None:
+        await ctx.send("지정된 역할을 찾을 수 없습니다.")
+        return
 
-#     if role is None:
-#         await ctx.send(f"역할을 찾을 수 없습니다.")
-#         return
+    # 현재 채널에서 해당 역할의 기존 권한을 가져옴
+    current_overwrites = ctx.channel.overwrites_for(role)
 
-#     # 해당 채널에서 역할의 '메시지 보내기' 권한 제거
-#     await channel.set_permissions(role, send_messages=False)
-#     await ctx.send(f"반속으로 인해 채팅이 3초 동안 제한됩니다.")
+    # 메시지 보내기 권한만 False로 변경 (다른 권한은 유지)
+    current_overwrites.send_messages = False
+    await ctx.channel.set_permissions(role, overwrite=current_overwrites)
+    await ctx.send(f"{role.name} 역할이 3초 동안 채팅을 할 수 없습니다.")
 
-#     # 3초 대기
-#     await asyncio.sleep(3)
+    # 3초 후 다시 메시지 보내기 권한을 원래대로 복구
+    await asyncio.sleep(3)
+    current_overwrites.send_messages = None  # 원래 상태로 복구 (기본 권한)
+    await ctx.channel.set_permissions(role, overwrite=current_overwrites)
+    await ctx.send(f"{role.name} 역할이 다시 채팅을 할 수 있습니다.")
 
-#     # 역할의 '메시지 보내기' 권한 복원
-#     await channel.set_permissions(role, send_messages=True)
-#     await ctx.send(f"채팅이 다시 가능합니다.")
+# 관리자 권한이 없는 사용자가 명령어를 사용할 때 에러 처리
+@block_chat.error
+async def block_chat_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("이 명령어를 사용하려면 관리자 권한이 필요합니다.")
+
 
 # 봇 실행
 bot.run(TOKEN)
