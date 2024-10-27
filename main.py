@@ -367,6 +367,7 @@ async def help_command(ctx):
 BLACK_ROLE_ID = 1286174278227722240
 
 @bot.command(name="반속제한")
+@commands.has_permissions(administrator=True)   
 async def block_chat(ctx):
     channel = ctx.channel  # 명령어가 실행된 채널
     role = ctx.guild.get_role(ROLE_ID)  # 역할 ID로 역할 객체 가져오기
