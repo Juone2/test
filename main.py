@@ -364,6 +364,27 @@ async def help_command(ctx):
     )
     await ctx.send(help_text)
 
+BLACK_ROLE_ID = 1286174278227722240
+
+@bot.command(name="반속제한")
+async def block_chat(ctx):
+    channel = ctx.channel  # 명령어가 실행된 채널
+    role = ctx.guild.get_role(ROLE_ID)  # 역할 ID로 역할 객체 가져오기
+
+    if role is None:
+        await ctx.send(f"역할을 찾을 수 없습니다.")
+        return
+
+    # 해당 채널에서 역할의 '메시지 보내기' 권한 제거
+    await channel.set_permissions(role, send_messages=False)
+    await ctx.send(f"채팅이 3초 동안 제한됩니다.")
+
+    # 3초 대기
+    await asyncio.sleep(3)
+
+    # 역할의 '메시지 보내기' 권한 복원
+    await channel.set_permissions(role, send_messages=True)
+    await ctx.send(f"채팅이 다시 가능합니다.")
 
 # 봇 실행
 bot.run(TOKEN)
