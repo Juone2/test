@@ -370,7 +370,7 @@ BLACK_ROLE_ID = 1286174278227722240
 @commands.has_permissions(administrator=True)   
 async def block_chat(ctx):
     channel = ctx.channel  # 명령어가 실행된 채널
-    role = ctx.guild.get_role(ROLE_ID)  # 역할 ID로 역할 객체 가져오기
+    role = ctx.guild.get_role(BLACK_ROLE_ID)  # 역할 ID로 역할 객체 가져오기
 
     if role is None:
         await ctx.send(f"역할을 찾을 수 없습니다.")
@@ -378,7 +378,7 @@ async def block_chat(ctx):
 
     # 해당 채널에서 역할의 '메시지 보내기' 권한 제거
     await channel.set_permissions(role, send_messages=False)
-    await ctx.send(f"채팅이 3초 동안 제한됩니다.")
+    await ctx.send(f"반속으로 인해 채팅이 3초 동안 제한됩니다.")
 
     # 3초 대기
     await asyncio.sleep(3)
