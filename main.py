@@ -449,7 +449,7 @@ async def block_chat_error(ctx, error):
         
         # Heroku sleep 방지용 메시지 전송 함수
 def send_heartbeat_message():
-    channel_id = 123456789012345678  # 메시지를 보낼 임의의 채널 ID로 바꾸세요
+    channel_id = 1301052135143899137  # 메시지를 보낼 임의의 채널 ID로 바꾸세요
     channel = bot.get_channel(channel_id)
     if channel:
         message = random.choice(["I'm still awake!", "Stayin' alive!", "Ping! Heroku, don't sleep!", "Still here!"])
