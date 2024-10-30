@@ -4,6 +4,9 @@ import asyncio
 from dotenv import load_dotenv
 import os
 import random
+import schedule
+import time
+import threading
 
 # 환경 변수 로드
 load_dotenv()
@@ -137,7 +140,6 @@ menu_dict = {
     "국/탕": ["갈비탕", "곰국", "순대국", "설렁탕", "닭곰탕", "육개장", "떡국", "추어탕", "알탕", "매운탕"],
     "기타": ["떡볶이", "샌드위치", "토스트", "핫도그", "핫케이크", "피자", "치킨", "소세지볶음", "프렌치토스트", "샐러드"],
 }
-
 
 @bot.event
 async def on_ready():
@@ -397,7 +399,7 @@ async def help_command(ctx):
     )
     await ctx.send(help_text)
 
-@bot.command(name='blockchat')
+@bot.command(name='반속제한')
 @commands.has_permissions(administrator=True)  # 관리자 권한 체크
 async def block_chat(ctx):
     role_id = 1286174278227722240  # 채팅을 제한할 역할 ID
@@ -426,6 +428,29 @@ async def block_chat(ctx):
 async def block_chat_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("이 명령어를 사용하려면 관리자 권한이 필요합니다.")
+        
+        # Heroku sleep 방지용 메시지 전송 함수
+def send_heartbeat_message():
+    channel_id = 1301052135143899137  # 메시지를 보낼 임의의 채널 ID로 바꾸세요
+    channel = bot.get_channel(channel_id)
+    if channel:
+        message = random.choice(["I'm still awake!", "Stayin' alive!", "Ping! Heroku, don't sleep!", "Still here!"])
+        asyncio.run_coroutine_threadsafe(channel.send(message), bot.loop)
+
+# 29분마다 실행될 스케줄러 설정
+def schedule_heartbeat():
+    schedule.every(29).minutes.do(send_heartbeat_message)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+# 봇 이벤트: 봇이 준비되었을 때 스케줄러 시작
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user}')
+    # 새로운 스레드에서 스케줄러 실행
+    threading.Thread(target=schedule_heartbeat).start()
 
 
 # 봇 실행
