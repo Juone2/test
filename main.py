@@ -7,7 +7,7 @@ import random
 import schedule
 import time
 import threading
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 # 환경 변수 로드
 load_dotenv()
@@ -236,15 +236,18 @@ async def create_question(ctx, *args):
     
 @bot.command(name='퇴근하고싶다')
 async def time_until_off_work(ctx):
-    now = datetime.now()
-    end_time = now.replace(hour=19, minute=0, second=0, microsecond=0)
+    now_utc = datetime.now(timezone.utc)  # UTC 시간 가져오기
+    now_kst = now_utc + timedelta(hours=9)  # 한국 표준시(KST)로 변환
+    end_time = now_kst.replace(hour=19, minute=0, second=0, microsecond=0)
 
-    if now > end_time:
-        end_time += timedelta(days=1)  # 만약 현재 시간이 7시를 넘었으면, 다음날 7시로 설정
+    # 현재 시간이 퇴근 시간(오후 7시)을 넘겼을 경우, 다음 날 7시로 설정
+    if now_kst > end_time:
+        end_time += timedelta(days=1)
 
-    remaining_time = end_time - now
+    remaining_time = end_time - now_kst
     hours, remainder = divmod(remaining_time.seconds, 3600)
     minutes = remainder // 60
+
 
     await ctx.send(f"퇴근시간까지 {hours}시간 {minutes}분 남았습니다.. 조금만 더 힘내!!!!!")
 
