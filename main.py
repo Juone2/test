@@ -452,7 +452,7 @@ def send_heartbeat_message():
     channel_id = 1301052135143899137  # 메시지를 보낼 임의의 채널 ID로 바꾸세요
     channel = bot.get_channel(channel_id)
     if channel:
-        message = random.choice(["I'm still awake!", "Stayin' alive!", "Ping! Heroku, don't sleep!", "Still here!"])
+        message = random.choice(["설탕이 sleep 모드 방지 메시지"])
         asyncio.run_coroutine_threadsafe(channel.send(message), bot.loop)
 
 # 29분마다 실행될 스케줄러 설정
