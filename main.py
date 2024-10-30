@@ -7,6 +7,7 @@ import random
 import schedule
 import time
 import threading
+from datetime import datetime, timedelta
 
 # 환경 변수 로드
 load_dotenv()
@@ -137,7 +138,7 @@ menu_dict = {
     "덮밥/육류밥": ["카레", "오므라이스", "연어덮밥", "제육덮밥", "치킨마요덮밥", "장어덮밥", "불고기덮밥", "스팸덮밥"],
     "면": ["라면", "냉면", "짜장면", "짬뽕", "비빔국수", "칼국수", "우동", "쌀국수", "크림파스타", "토마토스파게티"],
     "해장": ["콩나물국밥", "북엇국", "순대국", "대파라면", "매운갈비탕", "뼈해장국", "소고기무국", "조개탕", "설렁탕"],
-    "국/탕": ["갈비탕", "곰국", "순대국", "설렁탕", "닭곰탕", "육개장", "떡국", "추어탕", "알탕", "매운탕"],
+    "국/탕": ["갈비탕", "곰국", "순대국", "설렁탕", "닭곰탕", "육개장", "떡국", "추어탕", "알탕", "매운탕", "마라탕"],
     "기타": ["떡볶이", "샌드위치", "토스트", "핫도그", "핫케이크", "피자", "치킨", "소세지볶음", "프렌치토스트", "샐러드"],
 }
 
@@ -232,6 +233,20 @@ async def create_question(ctx, *args):
 
     user_answers = '\n\n'.join([f"{user} : " for user in user_list])
     await ctx.send(f"## 질문이 등록되었습니다!\n ### 질문 ID: {question_id}\n 질문 내용: {question_text}\n\n{user_answers}\n")
+    
+@bot.command(name='퇴근하고싶다')
+async def time_until_off_work(ctx):
+    now = datetime.now()
+    end_time = now.replace(hour=19, minute=0, second=0, microsecond=0)
+
+    if now > end_time:
+        end_time += timedelta(days=1)  # 만약 현재 시간이 7시를 넘었으면, 다음날 7시로 설정
+
+    remaining_time = end_time - now
+    hours, remainder = divmod(remaining_time.seconds, 3600)
+    minutes = remainder // 60
+
+    await ctx.send(f"퇴근시간까지 {hours}시간 {minutes}분 남았습니다.. 조금만 더 힘내!!!!!")
 
 @bot.command(name='에스크답변')
 async def answer_question(ctx, question_id: int, user_name: str, *response):
@@ -431,7 +446,7 @@ async def block_chat_error(ctx, error):
         
         # Heroku sleep 방지용 메시지 전송 함수
 def send_heartbeat_message():
-    channel_id = 1301052135143899137  # 메시지를 보낼 임의의 채널 ID로 바꾸세요
+    channel_id = 123456789012345678  # 메시지를 보낼 임의의 채널 ID로 바꾸세요
     channel = bot.get_channel(channel_id)
     if channel:
         message = random.choice(["I'm still awake!", "Stayin' alive!", "Ping! Heroku, don't sleep!", "Still here!"])
