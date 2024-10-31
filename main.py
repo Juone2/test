@@ -469,6 +469,53 @@ async def on_ready():
     print(f'Logged in as {bot.user}')
     # 새로운 스레드에서 스케줄러 실행
     threading.Thread(target=schedule_heartbeat).start()
+    
+@bot.command(name='역할유저')
+@commands.has_permissions(administrator=True)  # 관리자 권한 체크
+async def get_users_with_role(ctx, role_id: int, *, new_prefix: str):
+    """특정 역할을 가진 유저 중 '【 은행잎 】'로 시작하는 유저의 닉네임을 변경하는 명령어"""
+    role = ctx.guild.get_role(role_id)
+    
+    if role is None:
+        await ctx.send(f"ID가 {role_id}인 역할을 찾을 수 없습니다.")
+        return
+
+    members_with_role = [member for member in ctx.guild.members if role in member.roles]
+    
+    if not members_with_role:
+        await ctx.send(f"{role.name} 역할을 가진 유저가 없습니다.")
+        return
+    
+    members_to_update = [member for member in members_with_role if member.display_name.startswith("【 은월 】")]
+
+    if not members_to_update:
+        await ctx.send(f"'【 은행잎 】'로 시작하는 닉네임을 가진 유저가 없습니다.")
+        return
+    
+    success_count = 0
+    failure_count = 0
+
+    for i, member in enumerate(members_to_update):
+        new_nickname = member.display_name.replace("【 은행잎 】", f"【 {new_prefix} 】")
+        try:
+            await member.edit(nick=new_nickname)
+            success_count += 1
+            await ctx.send(f"{member.display_name}의 닉네임이 '{new_nickname}'으로 변경되었습니다.")
+        except discord.Forbidden:
+            failure_count += 1
+            await ctx.send(f"{member.display_name}의 닉네임을 변경할 수 없습니다. 권한이 없습니다.")
+        except discord.HTTPException:
+            failure_count += 1
+            await ctx.send(f"{member.display_name}의 닉네임 변경 중 오류가 발생했습니다.")
+
+        # 속도 제한 방지: 5명 처리 후 1.5초 대기, 50명 처리 후 10초 대기
+        if (i + 1) % 5 == 0:
+            await asyncio.sleep(1.5)
+        if (i + 1) % 50 == 0:
+            await asyncio.sleep(10)
+
+    await ctx.send(f"'【 은행잎 】'로 시작하는 유저 {success_count}명의 닉네임을 '【 {new_prefix} 】'로 변경했습니다. 실패한 요청: {failure_count}명.")
+
 
 
 # 봇 실행
