@@ -489,14 +489,14 @@ async def get_users_with_role(ctx, role_id: int, *, new_prefix: str):
     members_to_update = [member for member in members_with_role if member.display_name.startswith("【 은월 】")]
 
     if not members_to_update:
-        await ctx.send(f"'【 은행잎 】'로 시작하는 닉네임을 가진 유저가 없습니다.")
+        await ctx.send(f"'【 은월 】'로 시작하는 닉네임을 가진 유저가 없습니다.")
         return
     
     success_count = 0
     failure_count = 0
 
     for i, member in enumerate(members_to_update):
-        new_nickname = member.display_name.replace("【 은행잎 】", f"【 {new_prefix} 】")
+        new_nickname = member.display_name.replace("【 은월 】", f"【 {new_prefix} 】")
         try:
             await member.edit(nick=new_nickname)
             success_count += 1
@@ -513,8 +513,6 @@ async def get_users_with_role(ctx, role_id: int, *, new_prefix: str):
             await asyncio.sleep(1.5)
         if (i + 1) % 50 == 0:
             await asyncio.sleep(10)
-
-    await ctx.send(f"'【 은행잎 】'로 시작하는 유저 {success_count}명의 닉네임을 '【 {new_prefix} 】'로 변경했습니다. 실패한 요청: {failure_count}명.")
 
 
 
