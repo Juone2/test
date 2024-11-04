@@ -403,6 +403,21 @@ async def total_performance(ctx, user_name: str):
 
     total_points = performance_scores.get(user_name, 0)
     await ctx.send(f"'{user_name}' 님의 총 실적 점수는 {total_points}점입니다.")
+    
+@bot.command(name='야옹')
+async def 현하_command(ctx):
+    """ '.현하' 명령어를 입력하면 # 바보 형식으로 큰 글씨로 응답 """
+    await ctx.send("# 애기")  
+    
+@bot.command(name='메리')
+async def 현하_command(ctx):
+    """ '.현하' 명령어를 입력하면 # 바보 형식으로 큰 글씨로 응답 """
+    await ctx.send("미 || 뭐 현하야 결혼하자고?")  
+        
+@bot.command(name='여은')
+async def 현하_command(ctx):
+    """ '.현하' 명령어를 입력하면 # 바보 형식으로 큰 글씨로 응답 """
+    await ctx.send("# 공주")  
 
 @bot.command(name='실적도움말')
 async def help_command(ctx):
@@ -469,11 +484,11 @@ async def on_ready():
     print(f'Logged in as {bot.user}')
     # 새로운 스레드에서 스케줄러 실행
     threading.Thread(target=schedule_heartbeat).start()
-    
+
 @bot.command(name='역할유저')
 @commands.has_permissions(administrator=True)  # 관리자 권한 체크
 async def get_users_with_role(ctx, role_id: int, *, new_prefix: str):
-    """특정 역할을 가진 유저 중 '【 은행잎 】'로 시작하는 유저의 닉네임을 변경하는 명령어"""
+    """특정 역할을 가진 유저 중 '【 낙화 】'로 시작하는 유저의 닉네임을 변경하는 명령어"""
     role = ctx.guild.get_role(role_id)
     
     if role is None:
@@ -486,34 +501,25 @@ async def get_users_with_role(ctx, role_id: int, *, new_prefix: str):
         await ctx.send(f"{role.name} 역할을 가진 유저가 없습니다.")
         return
     
-    members_to_update = [member for member in members_with_role if member.display_name.startswith("【 은월 】")]
+    # 닉네임이 "【 낙화 】"로 시작하는 유저만 필터링
+    members_to_update = [member for member in members_with_role if member.display_name.startswith("【 낙화 】")]
 
     if not members_to_update:
-        await ctx.send(f"'【 은월 】'로 시작하는 닉네임을 가진 유저가 없습니다.")
+        await ctx.send(f"'【 낙화 】'로 시작하는 닉네임을 가진 유저가 없습니다.")
         return
     
-    success_count = 0
-    failure_count = 0
-
+    # 닉네임 변경
     for i, member in enumerate(members_to_update):
-        new_nickname = member.display_name.replace("【 은월 】", f"【 {new_prefix} 】")
+        new_nickname = member.display_name.replace("【 낙화 】", f"【 {new_prefix} 】")
         try:
             await member.edit(nick=new_nickname)
-            success_count += 1
             await ctx.send(f"{member.display_name}의 닉네임이 '{new_nickname}'으로 변경되었습니다.")
         except discord.Forbidden:
-            failure_count += 1
             await ctx.send(f"{member.display_name}의 닉네임을 변경할 수 없습니다. 권한이 없습니다.")
         except discord.HTTPException:
-            failure_count += 1
             await ctx.send(f"{member.display_name}의 닉네임 변경 중 오류가 발생했습니다.")
-
-        # 속도 제한 방지: 5명 처리 후 1.5초 대기, 50명 처리 후 10초 대기
-        if (i + 1) % 5 == 0:
-            await asyncio.sleep(1.5)
-        if (i + 1) % 50 == 0:
-            await asyncio.sleep(10)
-
+    
+    await ctx.send(f"'【 낙화 】'로 시작하는 유저들의 닉네임을 '【 {new_prefix} 】'로 변경했습니다.")
 
 
 # 봇 실행
