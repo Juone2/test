@@ -405,19 +405,20 @@ async def total_performance(ctx, user_name: str):
     await ctx.send(f"'{user_name}' 님의 총 실적 점수는 {total_points}점입니다.")
     
 @bot.command(name='야옹')
-async def 현하_command(ctx):
-    """ '.현하' 명령어를 입력하면 # 바보 형식으로 큰 글씨로 응답 """
+async def merry_command(ctx):
     await ctx.send("# 애기")  
     
 @bot.command(name='메리')
-async def 현하_command(ctx):
-    """ '.현하' 명령어를 입력하면 # 바보 형식으로 큰 글씨로 응답 """
+async def merry_command(ctx):
     await ctx.send("미 || 뭐 현하야 결혼하자고?")  
         
 @bot.command(name='여은')
-async def 현하_command(ctx):
-    """ '.현하' 명령어를 입력하면 # 바보 형식으로 큰 글씨로 응답 """
+async def merry_command(ctx):
     await ctx.send("# 공주")  
+    
+@bot.command(name='사랑')
+async def merry_command(ctx):
+    await ctx.send("# 누나")  
 
 @bot.command(name='실적도움말')
 async def help_command(ctx):
