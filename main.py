@@ -419,6 +419,10 @@ async def merry_command(ctx):
 @bot.command(name='사랑')
 async def merry_command(ctx):
     await ctx.send("# 누나")  
+    
+@bot.command(name='원히')
+async def merry_command(ctx):
+    await ctx.send("# 군필 다정 연하남 연락 주세요")
 
 @bot.command(name='실적도움말')
 async def help_command(ctx):
