@@ -525,7 +525,41 @@ async def get_users_with_role(ctx, role_id: int, *, new_prefix: str):
             await ctx.send(f"{member.display_name}의 닉네임 변경 중 오류가 발생했습니다.")
     
     await ctx.send(f"'【 낙화 】'로 시작하는 유저들의 닉네임을 '【 {new_prefix} 】'로 변경했습니다.")
+    
+@bot.command(name="설야채널다삭제해버려")
+@commands.has_permissions(administrator=True)
+async def delete_all_except(ctx, exclude_channel_id: int):
+    """특정 채널을 제외하고 모든 채널을 삭제"""
+    exclude_channel = bot.get_channel(exclude_channel_id)
+    
+    if exclude_channel is None:
+        await ctx.send("제외할 채널을 찾을 수 없습니다. 유효한 채널 ID를 입력해 주세요.")
+        return
+    
+    for channel in ctx.guild.channels:
+        if channel.id != exclude_channel_id:
+            try:
+                await channel.delete()
+                print(f"Deleted channel: {channel.name}")
+            except Exception as e:
+                print(f"Could not delete channel {channel.name}: {e}")
 
+    await ctx.send(f"✅ 지정한 채널을 제외하고 모든 채널이 삭제되었습니다. 제외된 채널: {exclude_channel.name}")
+    
+@bot.command(name="설야역할다삭제해버려")
+@commands.has_permissions(administrator=True)
+async def delete_all_roles(ctx):
+    """모든 역할을 삭제하는 명령어"""
+    # 모든 역할 삭제 (기본 역할인 @everyone 제외)
+    for role in ctx.guild.roles:
+        if role != ctx.guild.default_role:  # @everyone 역할 제외
+            try:
+                await role.delete()
+                print(f"Deleted role: {role.name}")
+            except Exception as e:
+                print(f"Could not delete role {role.name}: {e}")
+
+    await ctx.send("✅ 모든 역할이 삭제되었습니다.")
 
 # 봇 실행
 bot.run(TOKEN)
